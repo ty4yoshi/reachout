@@ -1,4 +1,0 @@
-#!/bin/sh
-git add -A
-git commit -m "ReachOut `date -R`"
-git push origin master
