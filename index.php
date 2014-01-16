@@ -3,6 +3,7 @@
 	index.php --- Reach Out ... ヘッダとフッタを共通化するスクリプト
 	
 	version 0.1.5 --- 2012/01/19 by yoshi
+        test
 */
 /* ----- 設定値（適時変更） ----- */
 define("DS", "/");
