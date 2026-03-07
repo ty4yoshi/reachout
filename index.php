@@ -3,7 +3,7 @@
 	index.php --- Reach Out ... ヘッダとフッタを共通化するスクリプト
 	
 	version 0.1.5 --- 2012/01/19 by yoshi
-	version 0.2.0 --- 2026/03/07 by yoshi PHP8対応
+	version 0.2.0 --- 2026/03/07 by yoshi PHP8対応、ファイルキャッシュに変更
 ===================================================================*/
 
 /* ----- 設定値（適時変更） ----- */
@@ -32,8 +32,46 @@ define("CACHE_LIFE_TIME", 7200);
 define("CACHE_DIR", "tmp");
 // キャッシュ一時停止
 define("CACHE_STOP", false);
-// キャッシュクラス PEAR Cache_Lite
-//require_once("lib/Cache_Lite/Lite.php");
+// ファイルキャッシュクラス
+class FileCache {
+	private $cacheDir;
+	private $lifeTime;
+	
+	public function __construct($options) {
+		$this->cacheDir = rtrim($options['cacheDir'], '/\\') . DIRECTORY_SEPARATOR;
+		$this->lifeTime = $options['lifeTime'] ?? 3600;
+		if (!is_dir($this->cacheDir)) {
+			mkdir($this->cacheDir, 0755, true);
+		}
+	}
+	
+	public function get($key) {
+		$file = $this->getCacheFile($key);
+		if (!file_exists($file)) return false;
+		
+		if (time() - filemtime($file) > $this->lifeTime) {
+			unlink($file);
+			return false;
+		}
+		
+		return file_get_contents($file);
+	}
+	
+	public function save($data, $key = null) {
+		if ($key === null) $key = md5($data);
+		$file = $this->getCacheFile($key);
+		return file_put_contents($file, $data, LOCK_EX) !== false;
+	}
+	
+	public function remove($key) {
+		$file = $this->getCacheFile($key);
+		return file_exists($file) ? unlink($file) : true;
+	}
+	
+	private function getCacheFile($key) {
+		return $this->cacheDir . md5($key) . '.cache';
+	}
+}
 
 // html 出力クラス
 class Html {
@@ -128,7 +166,7 @@ class Html {
 			'cacheDir' => $this->cacheDir . DS,
 			'lifeTime' => $this->cacheLifeTime
 		);
-		$this->cache = new Cache_Lite($options);
+		$this->cache = new FileCache($options);
 		return true;
 	}
 	/* ----------- method ----------- */

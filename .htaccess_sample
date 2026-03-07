@@ -1,0 +1,20 @@
+# ルートフォルダに設置する場合は（例．http://www.hogehoge.com）
+RewriteEngine on
+RewriteBase /
+RewriteCond %{REQUEST_URI} !/$
+RewriteCond %{REQUEST_URI} !\.[^/\.]+$
+RewriteRule .* %{REQUEST_URI}/ [L,R]
+RewriteCond %{REQUEST_FILENAME} !^(.*)\.(gif|png|jpg|jpeg|css|js)$ [NC]
+RewriteCond $1 !^(index\.php|images|css|js|old_source|robots\.txt)
+RewriteRule ^(.*)$ index.php?file=$1 [L]
+お好みで変えてみて
+
+# サブフォルダに設置する場合は（例．http://www.hogehoge.com/reach_out/）
+RewriteEngine on
+RewriteBase /reach_out
+RewriteCond %{REQUEST_URI} !/$
+RewriteCond %{REQUEST_URI} !\.[^/\.]+$
+RewriteRule .* %{REQUEST_URI}/ [L,R]
+RewriteCond %{REQUEST_FILENAME} !^(.*)\.(gif|png|jpg|jpeg|css|js)$ [NC]
+RewriteCond $1 !^(index\.php|images|css|js|old_source|robots\.txt)
+RewriteRule ^(.*)$ /reach_out/index.php?file=$1 [L]
