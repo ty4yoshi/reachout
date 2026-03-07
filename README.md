@@ -38,6 +38,6 @@ Drupal, Joomla, MODx, ..... どれも重い、いらいらする。
 
 ＜動作環境＞
 
-PHP5
+PHP8（PHP7.4以上推奨）
 .htaccess が使える
 

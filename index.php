@@ -136,8 +136,8 @@ class Html {
 		// リクエストファイルを受信
 		$this->receive_file();
 		// キャッシュ出力
-		if (($this->cache) and 
-			($data = $this->cache->get($this->file)) and
+		if (($this->cache) && 
+			($data = $this->cache->get($this->file)) &&
 			($this->check_cache($this->file))) {
 			if ($this->cacheStop) {
 				// キャッシュ削除
@@ -159,9 +159,11 @@ class Html {
 			ob_start();
 			include($this->layout);
 			$buffer = ob_get_contents();
-			@ob_end_flush();
+			if (ob_get_level() > 0) {
+				ob_end_flush();
+			}
 			// キャッシュに保存
-			if (($this->cache) and (!$this->errorNumber)) $this->cache->save($buffer);
+			if (($this->cache) && (!$this->errorNumber)) $this->cache->save($buffer);
 			return true;
 		} else {
 			// エラー表示
@@ -189,7 +191,9 @@ class Html {
 			ob_start();
 			include($this->file);
 			$this->contents = ob_get_contents();
-			@ob_end_clean();
+			if (ob_get_level() > 0) {
+				ob_end_clean();
+			}
 			// 設定値読み込み
 			$this->get_config($this->contents);
 			// 改行をbrに変換
@@ -253,7 +257,7 @@ class Html {
 	}
 	// GETデータをチェック
 	function _h($name) {
-		if (isset($_GET[$name]) and ($_GET[$name])) {
+		if (isset($_GET[$name]) && $_GET[$name]) {
 			return htmlspecialchars($_GET[$name], ENT_QUOTES, $this->charset);
 		} else {
 			return false;
@@ -305,7 +309,9 @@ class Html {
 			ob_start();
 			include($file);
 			$this->header = ob_get_contents();
-			@ob_end_clean();
+			if (ob_get_level() > 0) {
+				ob_end_clean();
+			}
 		}
 	}
 	// キャッシュするディレクトリかチェック
@@ -333,8 +339,8 @@ class Html {
 	}
 	// ディレクトリ加工
 	function _adjust_dir($dirname) {
-		if (($dirname == DS) or
-			($dirname == ".") or
+		if (($dirname == DS) ||
+			($dirname == ".") ||
 			($dirname == "." . DS)) {
 			return "";
 		}
