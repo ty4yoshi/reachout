@@ -5,8 +5,12 @@
 	version 0.1.5 --- 2012/01/19 by yoshi
 	version 0.2.0 --- 2026/03/07 by yoshi PHP8対応、ファイルキャッシュに変更
 ===================================================================*/
-
-/* ----- 設定値（適時変更） ----- */
+/* ----- 設定値（適時変更） ---------------------------------------- */
+// バージョン
+define("SCRIPT_VER", "0.2.0");
+// スクリプト更新日
+define("SCRIPT_MODIFIED", "2026/03/07");
+// ディレクトリ区切り文字
 define("DS", "/");
 // サイト名
 define("SITE_NAME", "ReachOut - Framework For HTML");
@@ -23,15 +27,20 @@ define("CHARSET", "UTF-8");
 // CSSディレクトリ名
 define("CSS_DIR", "css");
 // CSSタグ
-define("CSS_TAG", '<link rel="stylesheet" type="text/css" href="%s" />');
+define("CSS_TAG", '<link rel="stylesheet" href="%s">');
 // キャッシュ（使うなら true, 使わないならば false ）
-define("CACHE", false);
+define("CACHE_FLG", false);
 // キャッシュ LifeTime 秒
 define("CACHE_LIFE_TIME", 7200);
 // キャッシュディレクトリ名
 define("CACHE_DIR", "tmp");
 // キャッシュ一時停止
 define("CACHE_STOP", false);
+// 省略時ファイル
+define("INDEX_FILES", array("index.html","index.php","index.htm"));
+// キャッシュしないディレクトリ
+define("NO_CACHE_DIR", array("feed"));
+/* ------- クラス ------------------------------------------------- */
 // ファイルキャッシュクラス
 class FileCache {
 	private $cacheDir;
@@ -72,7 +81,6 @@ class FileCache {
 		return $this->cacheDir . md5($key) . '.cache';
 	}
 }
-
 // html 出力クラス
 class Html {
 	
@@ -82,17 +90,17 @@ class Html {
 	protected $layoutFile = LAYOUT_DEFAULT_FILE;
 	protected $cssDir = CSS_DIR;
 	protected $charset = CHARSET;
-	protected $index = array("index.html","index.php","index.htm");	// 省略時ファイル
+	protected $index = INDEX_FILES;
 	protected $siteName = SITE_NAME;
 	protected $headerFile = HEADER_FILE;
 	protected $r2br = false;			// 改行をbrタグに変換（default: false）
-	protected $cacheFlg = CACHE;
+	protected $cacheFlg = CACHE_FLG;
 	protected $cacheLifeTime = CACHE_LIFE_TIME;
 	protected $cacheDir = CACHE_DIR;
 	protected $cacheStop = CACHE_STOP;
-	protected $noCacheDir = array("feed");	// キャッシュしないディレクトリ
-	protected $scriptVer = "0.1.5";
-	protected $scriptModified = "2012/01/19";
+	protected $noCacheDir = NO_CACHE_DIR;
+	protected $scriptVer = SCRIPT_VER;
+	protected $scriptModified = SCRIPT_MODIFIED;
 	protected $title = "";
 	protected $contents = "";
 	protected $dir = "";
@@ -112,7 +120,7 @@ class Html {
 	protected $errorMessage = "";
 	protected $errorNumber = "";
 	protected $rendering = "";
-	protected $cache = false;
+	protected ?FileCache $cache = null;
 	
 	function __construct() {
 		// レンダリング時間用のタイマー開始
@@ -159,7 +167,7 @@ class Html {
 	}
 	function set_cache() {
 		if (!$this->cacheFlg) {
-			$this->cache = false;
+			$this->cache = null;
 			return false;
 		}
 		$options = array(
@@ -175,7 +183,7 @@ class Html {
 		// リクエストファイルを受信
 		$this->receive_file();
 		// キャッシュ出力
-		if (($this->cache) && 
+		if ($this->cacheFlg && 
 			($data = $this->cache->get($this->file)) &&
 			($this->check_cache($this->file))) {
 			if ($this->cacheStop) {
@@ -202,7 +210,7 @@ class Html {
 				ob_end_flush();
 			}
 			// キャッシュに保存
-			if (($this->cache) && (!$this->errorNumber)) $this->cache->save($buffer);
+			if ($this->cacheFlg && (!$this->errorNumber)) $this->cache->save($buffer);
 			return true;
 		} else {
 			// エラー表示
@@ -371,7 +379,7 @@ class Html {
 			if (preg_match("/>$/", $val)) {
 				$res .= $val;
 			} else {
-				$res .= $val . "<br />";
+				$res .= $val . "<br>";
 			}
 		}
 		return $res;
