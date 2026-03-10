@@ -5,41 +5,8 @@
 	version 0.1.5 --- 2012/01/19 by yoshi
 	version 0.2.0 --- 2026/03/07 by yoshi PHP8対応、ファイルキャッシュに変更
 ===================================================================*/
-/* ----- 設定値（適時変更） ---------------------------------------- */
-// バージョン
-define("SCRIPT_VER", "0.2.0");
-// スクリプト更新日
-define("SCRIPT_MODIFIED", "2026/03/07");
-// ディレクトリ区切り文字
-define("DS", "/");
-// サイト名
-define("SITE_NAME", "ReachOut - Framework For HTML");
-// トップページファイル名
-define("TOP_PAGE", "top.php");
-// レイアウトディレクトリ名
-define("LAYOUT_DIR", "layout");
-// レイアウトファイル名（初期値）
-define("LAYOUT_DEFAULT_FILE", "default.php");
-// ＜header＞ タグに挿入するファイル名
-define("HEADER_FILE", "header.php");
-// 文字コード
-define("CHARSET", "UTF-8");
-// CSSディレクトリ名
-define("CSS_DIR", "css");
-// CSSタグ
-define("CSS_TAG", '<link rel="stylesheet" href="%s">');
-// キャッシュ（使うなら true, 使わないならば false ）
-define("CACHE_FLG", false);
-// キャッシュ LifeTime 秒
-define("CACHE_LIFE_TIME", 7200);
-// キャッシュディレクトリ名
-define("CACHE_DIR", "tmp");
-// キャッシュ一時停止
-define("CACHE_STOP", false);
-// 省略時ファイル
-define("INDEX_FILES", array("index.html","index.php","index.htm"));
-// キャッシュしないディレクトリ
-define("NO_CACHE_DIR", array("feed"));
+// 設定値ファイルを読み込み
+require_once 'env.php';
 /* ------- クラス ------------------------------------------------- */
 // ファイルキャッシュクラス
 class FileCache {
