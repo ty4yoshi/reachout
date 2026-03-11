@@ -1,9 +1,6 @@
 <?php
 /*===================================================================
 	index.php --- Reach Out ... ヘッダとフッタを共通化するスクリプト
-	
-	version 0.1.5 --- 2012/01/19 by yoshi
-	version 0.2.0 --- 2026/03/07 by yoshi PHP8対応、ファイルキャッシュに変更
 ===================================================================*/
 // 設定値ファイルを読み込み
 require_once 'env.php';
@@ -59,6 +56,7 @@ class Html {
 	protected $charset = CHARSET;
 	protected $index = INDEX_FILES;
 	protected $siteName = SITE_NAME;
+	protected $http = HTTP;
 	protected $headerFile = HEADER_FILE;
 	protected $r2br = false;			// 改行をbrタグに変換（default: false）
 	protected $cacheFlg = CACHE_FLG;
@@ -106,7 +104,7 @@ class Html {
 		$this->dir = $this->_adjust_dir($dirname);
 	}
 	function set_host() {
-		$this->host = "http://" . $_SERVER["HTTP_HOST"];
+		$this->host = $this->http . $_SERVER["HTTP_HOST"];
 	}
 	function set_homedir($dirname) {
 		$this->homeDir = $this->_adjust_dir($dirname);

@@ -2,8 +2,8 @@
 // ReachOut Framework Configuration
 
 // スクリプト情報
-define('SCRIPT_VER', '0.2.0');
-define('SCRIPT_MODIFIED', '2026/03/07');
+define('SCRIPT_VER', '0.2.1');
+define('SCRIPT_MODIFIED', '2026/03/11');
 // ディレクトリ設定
 define('DS', '/');
 define('LAYOUT_DIR', 'layout');
@@ -15,6 +15,7 @@ define('TOP_PAGE', 'top.php');
 define('LAYOUT_DEFAULT_FILE', 'default.php');
 define('HEADER_FILE', 'header.php');
 define('CHARSET', 'UTF-8');
+define('HTTP', 'https://');
 // CSSタグテンプレート
 define('CSS_TAG', '<link rel="stylesheet" href="%s">');
 // キャッシュ設定
