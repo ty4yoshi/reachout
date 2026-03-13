@@ -64,6 +64,7 @@ class Html {
 	protected $cacheDir = CACHE_DIR;
 	protected $cacheStop = CACHE_STOP;
 	protected $noCacheDir = NO_CACHE_DIR;
+	protected $noReadFiles = NO_READ_FILES;
 	protected $scriptVer = SCRIPT_VER;
 	protected $scriptModified = SCRIPT_MODIFIED;
 	protected $title = "";
@@ -270,7 +271,11 @@ class Html {
 	// GETデータをチェック
 	function _h($name) {
 		if (isset($_GET[$name]) && $_GET[$name]) {
-			return htmlspecialchars($_GET[$name], ENT_QUOTES, $this->charset);
+			$file = htmlspecialchars($_GET[$name], ENT_QUOTES, $this->charset);
+			if (in_array($file, $this->noReadFiles)) {
+				return false;
+			}
+			return $file;
 		} else {
 			return false;
 		}

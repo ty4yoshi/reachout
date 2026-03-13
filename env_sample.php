@@ -2,8 +2,8 @@
 // ReachOut Framework Configuration
 
 // スクリプト情報
-define('SCRIPT_VER', '0.2.1');
-define('SCRIPT_MODIFIED', '2026/03/11');
+define('SCRIPT_VER', '0.2.2');
+define('SCRIPT_MODIFIED', '2026/03/13');
 // ディレクトリ設定
 define('DS', '/');
 define('LAYOUT_DIR', 'layout');
@@ -25,3 +25,4 @@ define('CACHE_STOP', false);
 define('NO_CACHE_DIR', array('feed'));
 // ファイル設定
 define('INDEX_FILES', array('index.html', 'index.php', 'index.htm'));
+define('NO_READ_FILES', array('env.php'));
