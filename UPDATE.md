@@ -2,6 +2,7 @@
 
 ## version 0.2.2 - 2026/03/13
 - 読み取るファイルから除外する設定値を追加 NO_READ_FILES
+- HTMLを表示する関数を追加 htmlSourceToDisplay()
 ## version 0.2.1 - 2026/03/11
 - プロトコルを設定値に変更
 ## version 0.2.0 - 2026/03/10

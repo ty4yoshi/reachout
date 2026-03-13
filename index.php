@@ -4,7 +4,6 @@
 ===================================================================*/
 // 設定値ファイルを読み込み
 require_once 'env.php';
-/* ------- クラス ------------------------------------------------- */
 // ファイルキャッシュクラス
 class FileCache {
 	private $cacheDir;
@@ -44,6 +43,41 @@ class FileCache {
 	private function getCacheFile($key) {
 		return $this->cacheDir . md5($key) . '.cache';
 	}
+}
+/**
+ * HTMLソースコードを表示用に変換する関数
+ * HTMLの特殊文字をエンティティに変換して、ブラウザでソースコードとして表示できるようにする
+ *
+ * @param string $html_source 変換したいHTMLソースコード
+ * @param bool $preserve_formatting 改行やスペースを保持するかどうか（デフォルト: true）
+ * @param bool $add_line_numbers 行番号を追加するかどうか（デフォルト: false）
+ * @return string 変換済みのHTML
+ */
+function htmlSourceToDisplay($html_source, $preserve_formatting = true, $add_line_numbers = false) {
+    // 特殊文字をHTMLエンティティに変換
+    $converted = htmlspecialchars($html_source, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    
+    if ($preserve_formatting) {
+        // 改行とスペースを保持するためにpreタグで囲む
+        if ($add_line_numbers) {
+            // 行番号を追加
+            $lines = explode("\n", $converted);
+            $numbered_lines = array();
+            $line_count = count($lines);
+            $max_digits = strlen((string)$line_count);
+            
+            foreach ($lines as $index => $line) {
+                $line_num = $index + 1;
+                $padded_num = str_pad($line_num, $max_digits, '0', STR_PAD_LEFT);
+                $numbered_lines[] = "<span class=\"line-number\">$padded_num:</span> $line";
+            }
+            $converted = implode("\n", $numbered_lines);
+        }
+        
+        return "<pre class=\"html-source-display\">$converted</pre>";
+    }
+    
+    return $converted;
 }
 // html 出力クラス
 class Html {
